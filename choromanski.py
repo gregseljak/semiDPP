@@ -6,14 +6,16 @@ from dppy.multivariate_jacobi_ope import MultivariateJacobiOPE
 from pydpp.dpp import DPP as swkDPP
 from sklearn.cluster import KMeans
 
-
 def coordinate_square(res,d=2):
+
+
     sqrI = np.indices((np.ones(d, dtype=int)*res))/int((res+1)/2)
     sqrI-=sqrI.mean()
     return sqrI
 
 def visualize_kernel(ope):
-
+    N=ope.N
+    d = ope.dim
     sqrI = coordinate_square(res, d)
     general = np.zeros(sqrI[0].shape)
     for x in range(res):
@@ -22,6 +24,8 @@ def visualize_kernel(ope):
     plt.matshow(general[:,::-1])
 
 def choromanski_sample(ope, rho, Nk):
+    N=ope.N
+    d = ope.dim
     samples = np.random.uniform(-1,1, size=(ope.N*rho,d))
     feature_transform = ope.eval_multiD_polynomials(samples)
     outsamples = np.zeros((N,d))
@@ -40,6 +44,8 @@ def choromanski_sample(ope, rho, Nk):
     return outsamples
 
 def choromanski(ope, _maxiter):
+    N=ope.N
+    d = ope.dim
     maxiter=int(_maxiter)
     detout = np.zeros(maxiter)
     rho = ope.N*100
@@ -56,6 +62,8 @@ def choromanski(ope, _maxiter):
 
 #%%
 def figure2_3(ope, Nk_factor=10, fixrho=False):
+    N=ope.N
+    d = ope.dim
     res = 199
     mycmap=plt.get_cmap(name="tab20")
     DOU = 3
@@ -131,12 +139,10 @@ def figure2_3(ope, Nk_factor=10, fixrho=False):
 
 
 def figure4(ope):
-
-    ope = dpp
     dppy_samples  = np.zeros((int(1e3*ope.N),2))
     choro_samples2 = np.zeros((int(1e3*ope.N),2))
     choro_samples3 = np.zeros((int(1e3*ope.N),2))
-    for n in range(int(1e2)):
+    for n in range(int(1e3)):
         dppy_samples[int(ope.N*n):int(ope.N*(n+1))]  = ope.sample()
         choro_samples2[int(ope.N*n):int(ope.N*(n+1))] = choromanski_sample(ope,rho= 100, Nk=20)
         choro_samples3[int(ope.N*n):int(ope.N*(n+1))] = choromanski_sample(ope,rho=1000,Nk=20)

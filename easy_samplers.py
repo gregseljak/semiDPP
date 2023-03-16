@@ -7,7 +7,8 @@ from scipy.stats import rv_discrete
 from dppy.multivariate_jacobi_ope import MultivariateJacobiOPE
 from pydpp.dpp import DPP as swkDPP
 import choromanski as CRM
-
+d=2
+N=10
 
 def plot_determinant_dists(ref_output, _your_output, names=None):
     # plotting code for determinant distributions
@@ -135,22 +136,8 @@ def pseudoGB_MC(ope, outnb):
         detvals[Z] = np.linalg.det(kDPP.A[idx][:,idx])
     return detvals
 
-def figure1():
-    N, d = 10, 2
-    res = 200-1
-    jac_params = np.zeros((2,2))
-    dpp = MultivariateJacobiOPE(N, jac_params)
-    naiveMC_output = naive_MC(dpp,int(1e4))
-    ambient = uniform_dist(dpp, int(1e5))
-    DPPMCoutput = DPPMC_dist(dpp,int(1e4))
 
-    gb_output = pseudoGB_MC(dpp, int(1e4))
-    choromanski_output = CRM.choromanski(int(1e4))
-    plot_determinant_dists(ambient, [naiveMC_output, gb_output, DPPMCoutput,choromanski_output], \
-                        ["direct MC", "pseudo-Gibbs", "dPPy.sample()", "choromanski"])
-    plt.show()
-
-def figure_1(scale=1):
+def figure1(scale=1):
     N, d = 10, 2
     jac_params = np.zeros((d,2))
     dpp = MultivariateJacobiOPE(N, jac_params)
